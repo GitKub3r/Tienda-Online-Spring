@@ -1,7 +1,9 @@
 package org.example.tiendaonline.Modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -38,6 +41,7 @@ public class Cliente {
     @Column(name = "domicilio", length = 100)
     private String domicilio;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Historial> historials;
 
