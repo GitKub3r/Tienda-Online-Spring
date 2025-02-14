@@ -6,7 +6,10 @@ import org.example.tiendaonline.DTO.InsertHistorialDto;
 import org.example.tiendaonline.Modelo.Cliente;
 import org.example.tiendaonline.Modelo.Historial;
 import org.example.tiendaonline.Modelo.Producto;
+import org.example.tiendaonline.Service.ClienteService;
+import org.example.tiendaonline.Service.IClienteService;
 import org.example.tiendaonline.Service.IHistorialService;
+import org.example.tiendaonline.Service.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,12 @@ public class HistorialControler {
 
     @Autowired
     private IHistorialService servicio;
+
+    @Autowired
+    private IClienteService clienteService;
+
+    @Autowired
+    private IProductoService productoService;
 
     @GetMapping
     public ResponseEntity<List<HistorialDto>> obtenerTodos() {
@@ -66,9 +75,9 @@ public class HistorialControler {
         historial.setDescripcion(insertHistorialDto.getDescripcion());
         historial.setFechaCompra(insertHistorialDto.getFecha_compra());
         historial.setCantidad(insertHistorialDto.getCantidad());
-        Cliente cliente = servicio.obtenerUno(insertHistorialDto.getCliente()).getCliente();
+        Cliente cliente = clienteService.obtenerUno(insertHistorialDto.getCliente());
         historial.setCliente(cliente);
-        Producto producto = servicio.obtenerUno(insertHistorialDto.getProducto()).getProducto();
+        Producto producto = productoService.obtenerUno(insertHistorialDto.getProducto());
         historial.setProducto(producto);
         servicio.insertar(historial);
         return new ResponseEntity<>(insertHistorialDto, HttpStatus.OK);
