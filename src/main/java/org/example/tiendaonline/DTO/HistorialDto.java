@@ -33,7 +33,7 @@ public class HistorialDto {
 
     public HistorialDto castHistorialADto(Historial historial) {
         id = historial.getId();
-        cliente_id.setId(historial.getCliente().getId());
+        cliente_id = historial.getCliente();
         producto_id = historial.getProducto();
         fecha_compra = historial.getFechaCompra();
         cantidad = historial.getCantidad();
