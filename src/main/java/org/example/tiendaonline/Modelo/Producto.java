@@ -37,6 +37,6 @@ public class Producto {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY) // Carga diferida
-    private List<Historial> historials;
+//    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY) // Carga diferida
+//    private List<Historial> historials;
 }

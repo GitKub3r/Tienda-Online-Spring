@@ -41,6 +41,6 @@ public class Cliente {
     @Column(name = "domicilio", length = 100)
     private String domicilio;
 
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY) // Evita cargar de inmediato
-    private List<Historial> historials;
+//    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY) // Evita cargar de inmediato
+//    private List<Historial> historials;
 }
