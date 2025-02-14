@@ -1,8 +1,7 @@
 package org.example.tiendaonline.Modelo;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "cliente")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Evita errores de serialización
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Evita proxies de Hibernate
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +39,7 @@ public class Cliente {
     @Column(name = "domicilio", length = 100)
     private String domicilio;
 
-//    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY) // Evita cargar de inmediato
-//    private List<Historial> historials;
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference // Controla la serialización, evitando ciclos
+    private List<Historial> historials;
 }

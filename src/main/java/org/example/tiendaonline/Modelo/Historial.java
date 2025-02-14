@@ -1,8 +1,7 @@
 package org.example.tiendaonline.Modelo;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +17,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "historial")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Evita proxies de Hibernate
 public class Historial {
     @Id
@@ -26,14 +24,16 @@ public class Historial {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Carga diferida
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Relación con Cliente
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonBackReference // Evita la serialización infinita
     private Cliente cliente;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Carga diferida
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Relación con Producto
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "producto_id", nullable = false)
+    @JsonBackReference // Evita la serialización infinita
     private Producto producto;
 
     @Column(name = "fecha_compra", nullable = false)
