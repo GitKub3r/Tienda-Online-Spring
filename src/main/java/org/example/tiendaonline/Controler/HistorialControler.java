@@ -79,7 +79,7 @@ public class HistorialControler {
         historial.setCliente(cliente);
         Producto producto = productoService.obtenerUno(insertHistorialDto.getProducto());
         historial.setProducto(producto);
-        servicio.insertar(historial);
+        servicio.actualizar(historial);
         return new ResponseEntity<>(insertHistorialDto, HttpStatus.OK);
     }
 
