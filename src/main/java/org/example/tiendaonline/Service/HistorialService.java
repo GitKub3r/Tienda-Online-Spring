@@ -1,11 +1,10 @@
-package com.example.tiendaonlinespring.Service;
+package org.example.tiendaonline.Service;
 
-import com.example.tiendaonlinespring.DTO.HistorialDTO;
-import com.example.tiendaonlinespring.DTO.ProductoDTO;
-import com.example.tiendaonlinespring.Modelo.Cliente;
-import com.example.tiendaonlinespring.Modelo.Historial;
-import com.example.tiendaonlinespring.Modelo.Producto;
-import com.example.tiendaonlinespring.Repository.HistorialRepository;
+import org.example.tiendaonline.DTO.HistorialDto;
+import org.example.tiendaonline.DTO.InsertHistorialDto;
+import org.example.tiendaonline.Modelo.Historial;
+import org.example.tiendaonline.Modelo.Producto;
+import org.example.tiendaonline.Repository.IHistorialRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,11 @@ import java.util.List;
 @Service
 public class HistorialService {
 
-    HistorialRepository repo;
+    IHistorialRepo repo;
     ClienteService clientService;
     ProductoService productService;
 
-    public HistorialService(HistorialRepository historialRepository, ClienteService clientService, ProductoService productService) {
+    public HistorialService(IHistorialRepo historialRepository, ClienteService clientService, ProductoService productService) {
         this.repo = historialRepository;
         this.clientService = clientService;
         this.productService = productService;
@@ -35,8 +34,8 @@ public class HistorialService {
         return repo.findById(id).orElse(null);
     }
 
-    public ResponseEntity<String> add(HistorialDTO historial) {
-        Historial h = createHistorial(historial);
+    public ResponseEntity<String> add(HistorialDto historial) {
+        Historial h = historial.historialCast();
         Producto product = h.getProducto();
 
         switch (h.getTipo()) {
