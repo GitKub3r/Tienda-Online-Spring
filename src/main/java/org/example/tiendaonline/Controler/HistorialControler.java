@@ -6,7 +6,6 @@ import org.example.tiendaonline.DTO.InsertHistorialDto;
 import org.example.tiendaonline.Modelo.Cliente;
 import org.example.tiendaonline.Modelo.Historial;
 import org.example.tiendaonline.Modelo.Producto;
-import org.example.tiendaonline.Service.ClienteService;
 import org.example.tiendaonline.Service.IClienteService;
 import org.example.tiendaonline.Service.IHistorialService;
 import org.example.tiendaonline.Service.IProductoService;
@@ -52,29 +51,28 @@ public class HistorialControler {
     }
 
     @PostMapping
-    public ResponseEntity<InsertHistorialDto> insertar(@Valid @RequestBody InsertHistorialDto insertHistorialDto) {
-        Historial historial = new Historial();
-        historial.setId(null);
-        historial.setTipo(insertHistorialDto.getTipo());
-        historial.setDescripcion(insertHistorialDto.getDescripcion());
-        historial.setFechaCompra(insertHistorialDto.getFecha_compra());
-        historial.setCantidad(insertHistorialDto.getCantidad());
+    public ResponseEntity insertar(@Valid @RequestBody InsertHistorialDto insertHistorialDto) {
+        Historial historial = insertHistorialDto.historialCast();
         Cliente cliente = servicio.obtenerUno(insertHistorialDto.getCliente()).getCliente();
         historial.setCliente(cliente);
         Producto producto = servicio.obtenerUno(insertHistorialDto.getProducto()).getProducto();
         historial.setProducto(producto);
-        servicio.insertar(historial);
-        return new ResponseEntity<>(insertHistorialDto, HttpStatus.CREATED);
+        String texto = servicio.insertar1(historial);
+        switch (texto) {
+            case "ok":
+                return ResponseEntity.status(HttpStatus.OK).body("Compra procesada corractamente");
+            case "stock":
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Stock insuficiente: Solo quedan " + producto.getStock() + " unidades disponibles");
+            case "dias":
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Han pasado más de 30 días desde la compra");
+            default:
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Tipo de historial incorrecto");
+        }
     }
 
-    @PutMapping
-    public ResponseEntity<InsertHistorialDto> update(@Valid @RequestBody InsertHistorialDto insertHistorialDto) {
-        Historial historial = new Historial();
-        historial.setId(insertHistorialDto.getId());
-        historial.setTipo(insertHistorialDto.getTipo());
-        historial.setDescripcion(insertHistorialDto.getDescripcion());
-        historial.setFechaCompra(insertHistorialDto.getFecha_compra());
-        historial.setCantidad(insertHistorialDto.getCantidad());
+    @PutMapping("/{id}")
+    public ResponseEntity<InsertHistorialDto> update(@Valid @RequestBody InsertHistorialDto insertHistorialDto, @PathVariable(name = "id") Integer id) {
+        Historial historial = insertHistorialDto.historialCast1(id);
         Cliente cliente = clienteService.obtenerUno(insertHistorialDto.getCliente());
         historial.setCliente(cliente);
         Producto producto = productoService.obtenerUno(insertHistorialDto.getProducto());
